@@ -26,6 +26,12 @@
     var maxDiffX = 10; // max number of X pixels the mouse can move during long press before it is canceled
     var maxDiffY = 10; // max number of Y pixels the mouse can move during long press before it is canceled
 
+    // default delay to wait before triggering the long press event (ms)
+    var defaultDelay = '1500';
+
+    // custom attribute used to override the default delay
+    var customDelayAttribute = 'data-long-press-delay';
+
     // patch CustomEvent to allow constructor creation (IE/Chrome)
     if (typeof window.CustomEvent !== 'function') {
 
@@ -137,8 +143,16 @@
 
         var el = e.target;
 
-        // get delay from html attribute if it exists, otherwise default to 1500
-        var longPressDelayInMs = parseInt(el.getAttribute('data-long-press-delay') || '1500', 10);
+        var attribute = el.getAttribute(customDelayAttribute);
+        if(!attribute) {
+            var closestLongPressElement = el.closest('[' + customDelayAttribute + ']');
+            if(closestLongPressElement) {
+                attribute = closestLongPressElement.getAttribute(customDelayAttribute);
+            }
+        }
+        
+        // get delay from html attribute if it exists, otherwise use the default
+        var longPressDelayInMs = parseInt(attribute || defaultDelay, 10);
 
         // start the timer
         timer = requestTimeout(fireLongPressEvent.bind(el, e), longPressDelayInMs);
