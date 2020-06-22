@@ -37,15 +37,27 @@
 
             window.onload = function() {
 
-                document.addEventListener('long-press', function(e) {
-                    e.target.setAttribute('data-editing', 'true');
-                });
+                var items = document.querySelectorAll('.dock-item');
+
+                for (var i = 0; i < items.length; i++) {
+                    var element = items[i];
+                    element.addEventListener('long-press', function(e) {
+                        e.currentTarget.setAttribute('data-editing', 'true');
+                    });
+                }
+                
             }
         </script>
     </head>
     <body>
-        <div class="dock-item" data-long-press-delay="500">Press and hold me for .5s</div>
-        <div class="dock-item">Press and hold me for 1.5s</div>
-        <div class="dock-item" data-long-press-delay="5000">Press and hold me for 5s</div>
+        <div class="dock-item" data-long-press-delay="500">
+            <div>Press and hold me for .5s</div>
+        </div>
+        <div class="dock-item">
+            <div>Press and hold me for 1.5s</div>
+        </div>
+        <div class="dock-item" data-long-press-delay="5000">
+            <div>Press and hold me for 5s</div>
+        </div>
     </body>
 </html>
