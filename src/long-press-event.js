@@ -116,8 +116,8 @@
 
         clearLongPressTimer();
 
-        var clientX = isTouch ? originalEvent.touches[0].clientX : originalEvent.clientX,
-            clientY = isTouch ? originalEvent.touches[0].clientY : originalEvent.clientY;
+        var clientX = getClientX(originalEvent),
+            clientY = getClientY(originalEvent);
 
         // fire the long-press event
         var suppressClickEvent = this.dispatchEvent(new CustomEvent('long-press', { bubbles: true, cancelable: true, detail: { clientX: clientX, clientY: clientY } }));
@@ -159,6 +159,24 @@
     }
 
     /**
+     * Gets the X location of the touch or mouse event
+     * @param {event} e - event object
+     * @returns {number}
+     */
+    function getClientX(event) {
+        return isTouch ? event.touches[0].pageX : event.clientX;
+    }
+
+    /**
+     * Gets the Y location of the touch or mouse event
+     * @param {event} e - event object
+     * @returns {number}
+     */
+    function getClientY(event) {
+        return isTouch ? event.touches[0].pageY : event.clientY;
+    }
+
+    /**
      * method responsible for clearing a pending long press timer
      * @param {event} e - event object
      * @returns {void}
@@ -185,8 +203,8 @@
      * @returns {void}
      */
     function mouseDownHandler(e) {
-        startX = e.clientX;
-        startY = e.clientY;
+        startX = getClientX(e);
+        startY = getClientY(e);
         startLongPressTimer(e);
     }
 
@@ -198,8 +216,8 @@
     function mouseMoveHandler(e) {
 
         // calculate total number of pixels the pointer has moved
-        var diffX = Math.abs(startX - e.clientX);
-        var diffY = Math.abs(startY - e.clientY);
+        var diffX = Math.abs(startX - getClientX(e));
+        var diffY = Math.abs(startY - getClientY(e));
 
         // if pointer has moved more than allowed, cancel the long-press timer and therefore the event
         if (diffX >= maxDiffX || diffY >= maxDiffY) {
